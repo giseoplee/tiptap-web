@@ -9,13 +9,13 @@ export default {
         },
       },
       {
-        name: '신고된 사용자 목록',
-        url: '/apiroutes/list',
+        name: '신고 사용자 관리',
+        url: '/blame/list',
         icon: 'icon-pie-chart',
       },
       {
-        name: '정지 사용자 목록',
-        url: '/dashboard',
+        name: '차단 사용자 관리',
+        url: '/block/list',
         icon: 'icon-speedometer',
       }
     ]

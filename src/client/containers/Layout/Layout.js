@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Container } from 'reactstrap';
 
 import {
   AppAside,
   AppBreadcrumb,
-  AppFooter,
   AppHeader,
   AppSidebar,
   AppSidebarFooter,
@@ -24,7 +24,7 @@ class Layout extends Component {
     return (
       <div className="app">
         <AppHeader fixed>
-          <Header />
+          <Header {...this.props} />
         </AppHeader>
         <div className="app-body">
           <AppSidebar fixed display="lg">
@@ -45,7 +45,7 @@ class Layout extends Component {
                       : (null);
                   },
                 )}
-                <Redirect from="/" to="/blame/list" />
+                <Redirect from="/" to="/login" />
               </Switch>
             </Container>
           </main>
@@ -58,4 +58,11 @@ class Layout extends Component {
   }
 }
 
-export default Layout;
+const mapStateToProps = (state) => {
+  // log(state);
+  return {
+      token: state.auth.token
+  };
+};
+
+export default connect(mapStateToProps)(Layout);

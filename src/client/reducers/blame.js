@@ -1,27 +1,25 @@
-import * as types from '../constants/action-types';
-import update from 'react-addons-update';
+import {
+    BLAME_LIST,
+    GET_BLAME_SUCCESS,
+    GET_BLAME_FAILURE
+} from '../constants/action-types';
 
 const initState = {
-    list: {
-        status: 'INIT',
-        data: []
-    }
+    status: 'INIT',
+    data: []
 }
 
-export default function blame (state, action) {
+export const getBlameList = params => ({
+    type: BLAME_LIST,
+    payload: params
+});
 
-    if (typeof state === "undefined") {
-        state = initState;
-    };
-
-    switch(action.type){
-        case types.BLAME_LIST:
-            return update(state, {
-                list: {
-                    status: {$set: 'SUCCESS'},
-                    data: {$set: action.payload}
-                }
-            });
+export default function blame (state = initState, { type, payload }) {
+    switch (type) {
+        case GET_BLAME_SUCCESS:
+            return { ...state, data: payload.data };
+        case GET_BLAME_FAILURE:
+            return { ...state, status: payload.desc };
         default:
             return state;
     }

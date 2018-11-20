@@ -5,11 +5,12 @@ const config = require('../config');
 const SessionModule = (function () {
   const setting = {
     store: new redisStore({
+      key: 'bot_builder',
       port: config.redis.redisPort,
       host: config.redis.redisHost,
       password: config.redis.redisPassword,
-      ttl: 21600,
-      logErrors: true
+      db: 1,
+      ttl: 60
     }),
     secret: config.server.auth_key,
     resave: false,

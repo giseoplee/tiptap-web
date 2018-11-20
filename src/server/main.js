@@ -3,18 +3,19 @@
 require('./utils/functional');
 
 const express = require('express');
-const path = require('path');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const util = require('util');
 const methodOverride = require('method-override');
 const http = require('http');
 const fileUpload = require('express-fileupload');
+const cookieParser = require('cookie-parser');
 const moment = require('moment');
 
 const config = require('./config');
 const routes = require('./modules/routeModule');
 const entity = require('./modules/entityModule');
+const session = require('./modules/sessionModule');
 const { run } = require('./modules/clusterModule');
 
 const forkCount = parseInt(process.env.FORK_CNT) || undefined;
@@ -27,6 +28,9 @@ global.baseUrl = process.env.NODE_ENV === 'ec2' ? `http://ec2-13-209-117-190.ap-
 function processRun() {
   (async () => {
     app.set('port', process.env.PORT || config.server.port);
+    app.use(cookieParser(config.server.auth_key));
+    session.Init();
+
     app.use(fileUpload({
       limits: { fileSize: 15 * 1024 * 1024 },
     }));
@@ -35,7 +39,7 @@ function processRun() {
     app.use(bodyParser.json({limit: '15mb'}));
     app.use(bodyParser.urlencoded({ extended: true, limit: '15mb' }));
     app.set('trust proxy', config.server.trust_proxy_host);
-    app.use(express.static('dist'));
+    app.use(express.static('../../dist'));
 
     entity.Init();
     routes.Init();
@@ -50,4 +54,3 @@ function processRun() {
 };
 
 !!clusterOn ? run(processRun, forkCount) : processRun();
-

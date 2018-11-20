@@ -1,15 +1,21 @@
 import React from 'react';
 import Loadable from 'react-loadable'
+import Loader from 'react-loader-spinner'
 
 import Layout from './containers/Layout';
 
 
 function Loading() {
-  return <div>Loading...</div>;
+  return <Loader type="Rings" color="#dc3545" height="100"	width="100" className="custom-center"/>;
 }
 
-const ApiRoutesBoard = Loadable({
-  loader: () => import('./views/Blame/List'),
+const BlameBoard = Loadable({
+  loader: () => import('./views/Blame'),
+  loading: Loading,
+});
+
+const BlockBoard = Loadable({
+  loader: () => import('./views/Block'),
   loading: Loading,
 });
 
@@ -21,7 +27,8 @@ const Login = Loadable({
 const routes = [
   { path: '/', exact: true, name: 'Home', component: Layout },
   { path: '/login', name: 'Login', component: Login },
-  { path: '/blame/list', name: 'Blame', component: ApiRoutesBoard },
+  { path: '/blame/list', name: 'Blame', component: BlameBoard },
+  { path: '/block/list', name: 'Block', component: BlockBoard }
 ];
 
 export default routes;

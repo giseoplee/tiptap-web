@@ -3,20 +3,9 @@ module.exports = {
       '/api/blame/list': {}
     },
     authRq: {
-      '/auth/token/create': {
-        type: 'kakao',
-        account: 'llgs901@naver.com',
-        name: '이기섭'
-      },
-      '/auth/sign/in': {
-        type: 'kakao',
-        account: 'llgs901@naver.com',
-        name: '이기섭'
-      },
-      '/auth/login': {
-        type: 'kakao',
-        account: 'llgs901@naver.com',
-        name: '이기섭'
+      '/api/auth/login': {
+        account: 'giseoplee',
+        password: 'test'
       }
     },
     accountRq: {

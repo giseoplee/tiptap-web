@@ -6,57 +6,57 @@ const _ = require('lodash');
 const router = express.Router();
 
 const { respondJson, respondOnError } = require('../utils/respond');
-const { getValue, setValue, setDefaultKey, setFirstAuth } = require('../modules/redisModule');
-const { authModel, userModel } = require('../model');
+const { authModel } = require('../model');
 const resultCode = require('../utils/resultCode');
-const { parameterFormCheck, getUrl } = require('../utils/common');
+const { parameterFormCheck, getUrl, encrypt, decrypt } = require('../utils/common');
 const { authRq } = require('../utils/requestForm');
 
 const controllerName = 'Auth';
 
 router.use((req, res, next) => {
-
   console.log(util.format('[Logger]::[Controller]::[%sController]::[Access Ip %s]::[Access Time %s]',
                               controllerName,
                               req.ip,
                               moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')
                           ));
+
+                          log(req.body);
   go(
     req.body || req.params || req.query,
     parameterFormCheck,
     f => f(authRq[getUrl(req.originalUrl)]),
     result => result
     ? next()
-    : respondOnError(res, resultCode.incorrectParamForm, {desc: "incorrect parameter form"})
+    : respondOnError(res, resultCode.incorrectParamForm, { desc: "Incorrect Parameter Form" })
   );
 });
 
 router.post('/login', async (req, res) => {
-  const { type = 'kakao', account, name } = req.body;
-  const data = {
-    name: name,
-    authType: type,
-    thirdPartyAccount: account
-  };
-
   try {
-    const token = await go(
-        data,
-        options => userModel.findOne({ where: options }),
-        result => !!result
-        ? respondJson(res, resultCode.success, { token: result.token })
-        : uuidv4()
+    const { account = false, password = false } = req.body;
+
+    if (!account || !password) {
+      throw { message: 'Incorrect Information!' };
+    }
+
+    const options = {
+      where : {
+        account: account,
+        password: encrypt(password)
+      }
+    };
+
+    accountRow = await go(
+      options,
+      authModel.find
     );
 
-    data.token = token;
-
-    go(
-      data,
-      userModel.create,
-      insertResult => setFirstAuth(insertResult.token, insertResult.id),
-      setAuthResult => respondJson(res, resultCode.success, { token: setAuthResult })
-    );
-
+    accountRow.length > 0
+    ? (() => {
+      req.session.auth = true;
+      return respondJson(res, resultCode.success, 'Login Success');
+     })() 
+    : respondOnError(res, resultCode.error, 'Invalid User');
   } catch (error) {
     respondOnError(res, resultCode.error, error.message);
   }
