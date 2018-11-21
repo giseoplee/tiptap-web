@@ -5,6 +5,9 @@ import {
     AUTH_FAILURE,
     AUTH_LOGOUT,
     AUTH_LOGOUT_COMPLETE,
+    SESSION_CHECK,
+    SESSION_ALIVE,
+    SESSION_EXPIRED,
     BLAME_LIST,
     GET_BLAME_SUCCESS,
     GET_BLAME_FAILURE } from '../constants/action-types';
@@ -21,15 +24,13 @@ function* authorize({ payload: { login, password } }) {
         const { data } = yield call(AuthApi.isLogin, '/api/auth/login', options);
         switch (data.code) {
             case "1000" : {
-                localStorage.setItem('token', data.data);
                 yield put({ type: AUTH_SUCCESS, payload: true });
             } break;
-            case "9000" : yield put({ type: AUTH_FAILURE, payload: data.data }); localStorage.removeItem('token'); break;
-            default : yield put({ type: AUTH_FAILURE, payload: 'Unkown Error' }); localStorage.removeItem('token'); break;
+            case "9000" : yield put({ type: AUTH_FAILURE, payload: data.data }); break;
+            default : yield put({ type: AUTH_FAILURE, payload: 'Unkown Error' }); break;
         };
     } catch (error) {
         yield put({ type: AUTH_FAILURE, payload: error.message });
-        localStorage.removeItem('token');
     }
 }
 
@@ -47,20 +48,34 @@ function* getBlameList({ payload: params }) {
     }
 }
 
-function* clearAuthorize () {
+function* destroyAuthorize() {
     try {
-        localStorage.removeItem('token');
+        yield call(AuthApi.isLogout, '/api/auth/logout');
         yield put({ type: AUTH_LOGOUT_COMPLETE, payload: false });
+        yield put({ type: SESSION_EXPIRED });
     } catch (error) {
-        log(error);
         yield put({ type: AUTH_LOGOUT_FAILURE, payload: error.message });
+    }
+}
+
+function* sessionCheck() {
+    try {
+        const { data } = yield call(AuthApi.isLogout, '/api/auth/check');
+        switch (data.code) {
+            case "1000" : yield put({ type: SESSION_ALIVE }); break;
+            case "4000" : yield put({ type: SESSION_EXPIRED }); break;
+            default : yield put({ type: SESSION_EXPIRED }); break;
+        };
+    } catch (error) {
+        yield put({ type: SESSION_EXPIRED, payload: error.message });
     }
 }
 
 function* saga() {
     yield takeLatest(AUTH_REQUEST, authorize);
     yield takeLatest(BLAME_LIST, getBlameList);
-    yield takeLatest(AUTH_LOGOUT, clearAuthorize);
+    yield takeLatest(AUTH_LOGOUT, destroyAuthorize);
+    yield takeLatest(SESSION_CHECK, sessionCheck);
 }
 
 export default saga

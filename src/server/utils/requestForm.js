@@ -6,7 +6,9 @@ module.exports = {
       '/api/auth/login': {
         account: 'giseoplee',
         password: 'test'
-      }
+      },
+      '/api/auth/logout': {},
+      '/api/auth/check': {}
     },
     accountRq: {
       '/account/update': {

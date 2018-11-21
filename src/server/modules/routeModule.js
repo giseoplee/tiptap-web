@@ -4,7 +4,8 @@ const moment = require('moment');
 const csrfProtection = new csurf({ cookie: true });
 const config = require('../config');
 const { blameCtrl, authCtrl } = require('../controller');
-const path = require('path');
+const { respondOnError } = require('../utils/respond');
+const resultCode = require('../utils/resultCode');
 
 const RoutesModule = (function (){
   return {
@@ -13,9 +14,8 @@ const RoutesModule = (function (){
       // app.use(csrfProtection);
       app.use((req, res, next) => {
 
-          log(req.session);
-          if (!req.session && req.originalUrl !== '/login') {
-            res.redirect('/login');
+          if (!req.session.auth && req.originalUrl !== '/api/auth/login') {
+            respondOnError(res, resultCode.sessionError, 'Not Alive Session');
           }
 
           res.header('Access-Control-Allow-Origin', config.server.accept_domain);

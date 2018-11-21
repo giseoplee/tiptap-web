@@ -9,7 +9,7 @@ import logo from '../../assets/img/ldcc_logo.png'
 import sygnet from '../../assets/img/lotte_logo.png'
 import avatar9 from '../../assets/img/avatars/2.jpg';
 
-import { clearAuthorize } from '../../reducers/auth';
+import { destroyAuthorize, sessionCheck, resetRedirect } from '../../reducers/auth';
 
 const propTypes = {
   children: PropTypes.node,
@@ -20,23 +20,37 @@ const defaultProps = {};
 class Header extends Component {
   constructor (props) {
     super(props);
+    this.state = {
+      status: 'init'
+    };
     this.logout = this.logout.bind(this);
   };
 
   logout() {
-    this.props.dispatch(clearAuthorize());
+    this.props.dispatch(destroyAuthorize());
+  }
+
+  static getDerivedStateFromProps (nextProps, prevState) {
+    if (prevState.status === 'init' && nextProps.status === false) {
+      return { status: 'check' };
+    } else {
+      return null;
+    }
+  }
+
+  shouldComponentUpdate (nextProps) {
+    if (nextProps.redirect) {
+      this.props.dispatch(resetRedirect());
+      this.props.history.push('/login');
+      return false;
+    } else {
+      return false;
+    }
   }
 
   render() {
-    // eslint-disable-next-line
     const { children, ...attributes } = this.props;
-    if (!this.props.status) this.props.history.push('/login');
-    /**
-     * props 방식은 새로고침 시 문제 발생
-     * 내일 쿠키 굽기 고고 / 여기서 제어가능 할듯
-     * TTL = maxAge 설정 / 라우터에서 검증하는 로직 구현
-     * 검증 실패시 빠꾸 시켜버림 강제로
-     */
+    if (this.state.status === 'check') this.props.dispatch(sessionCheck());
     return (
       <React.Fragment>
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
@@ -66,7 +80,8 @@ Header.defaultProps = defaultProps;
 
 const mapStateToProps = state => {
   return {
-      status: state.auth.status
+      status: state.auth.status,
+      redirect: state.auth.redirect
   };
 };
 
