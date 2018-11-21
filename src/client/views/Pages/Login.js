@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row, Alert } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { authorize, clearAuthorize } from '../../reducers/auth';
+import { authorize, clearAuthorize, sessionCheck } from '../../reducers/auth';
 
 class Login extends Component {
 
@@ -40,9 +40,16 @@ class Login extends Component {
     this.props.dispatch(authorize(login, password));
   }
 
+  componentDidMount () {
+    log(this.props);
+    this.props.dispatch(sessionCheck());
+    /**
+     * logout한 직후에는 세션 체크가 필요 없음
+     * 새로 고침 시 또는 처음 페이지 접속 시에만 확인 필요
+     */
+  }
+
   shouldComponentUpdate (nextProps, prevState) {
-    // log(nextProps.status);
-    // log(prevState.status);
     if (nextProps.status !== prevState.status) {
       switch (nextProps.status) {
         case true : {
@@ -58,13 +65,13 @@ class Login extends Component {
           this.props.dispatch(clearAuthorize());
         }
       }
+      return false;
     } else {
       return false;
     }
   }
 
   render() {
-    log(this.props);
     return (
       <div className="app flex-row align-items-center">
         <Container>
