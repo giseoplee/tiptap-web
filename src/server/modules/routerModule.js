@@ -9,7 +9,6 @@ const { respondOnError } = require('../utils/respond');
 const resultCode = require('../utils/resultCode');
 const distDir = path.resolve(__dirname, '../../../', 'dist', 'index.html');
 
-
 const RoutesModule = (function() {
   return {
     Init: function () {

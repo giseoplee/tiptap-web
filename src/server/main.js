@@ -11,12 +11,14 @@ const http = require('http');
 const fileUpload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
 const moment = require('moment');
+const path = require('path');
 
 const config = require('./config');
 const router = require('./modules/routerModule');
 const entity = require('./modules/entityModule');
 const session = require('./modules/sessionModule');
 const { run } = require('./modules/clusterModule');
+const bundlingDir = path.resolve(__dirname, '../..', 'dist');
 
 const forkCount = parseInt(process.env.FORK_CNT) || undefined;
 const clusterOn = process.env.CLUSTER_ON || false;
@@ -39,7 +41,7 @@ function processRun() {
     app.use(compression());
     app.use(methodOverride());
     app.set('trust proxy', config.server.trust_proxy_host);
-    app.use(express.static('../../dist'));
+    app.use(express.static(bundlingDir));
 
     entity.Init();
     router.Init();
