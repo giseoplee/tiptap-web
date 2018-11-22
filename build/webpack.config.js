@@ -1,15 +1,18 @@
 const path = require('path');
-const { HotModuleReplacementPlugin } = require('webpack');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const outputDirectory = path.join(__dirname, '..', 'dist');
+
+function resolve (dir) {
+  return path.join(__dirname, '..', dir);
+}
 
 module.exports = {
   entry: {
-    index : ['babel-polyfill', './src/client/index.js']
+    index : ['babel-polyfill', resolve('/src/client/index.js')]
   },
   output: {
-    path: outputDirectory,
+    path: resolve('dist'),
     filename: 'bundle.js',
     publicPath: '/'
   },
@@ -30,7 +33,7 @@ module.exports = {
       },
       {
         test: /\.(woff|woff2|eot|ttf|svg)$/,
-        loader: 'url-loader?limit=100000'
+        loader: 'url-loader?limit=10000'
       },
       {
         test: /\.(png|jpg|gif)$/,
@@ -49,8 +52,8 @@ module.exports = {
   },
   devtool: 'inline-source-map',
   plugins: [
-    new HotModuleReplacementPlugin(),
-    new CleanWebpackPlugin([outputDirectory]),
+    new webpack.HotModuleReplacementPlugin(),
+    new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
       inject: true,
       minify: {
@@ -58,8 +61,8 @@ module.exports = {
         collapseWhitespace: true,
         removeAttributeQuotes: true
       },
-      template: './public/index.html',
-      favicon: './public/lotte_logo.png'
+      template: resolve('/public/index.html'),
+      favicon: resolve('/public/lotte_logo.png')
     })
   ]
 };

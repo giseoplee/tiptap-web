@@ -13,7 +13,7 @@ const cookieParser = require('cookie-parser');
 const moment = require('moment');
 
 const config = require('./config');
-const routes = require('./modules/routeModule');
+const router = require('./modules/routerModule');
 const entity = require('./modules/entityModule');
 const session = require('./modules/sessionModule');
 const { run } = require('./modules/clusterModule');
@@ -28,6 +28,8 @@ global.baseUrl = process.env.NODE_ENV === 'ec2' ? `http://ec2-13-209-117-190.ap-
 function processRun() {
   (async () => {
     app.set('port', process.env.PORT || config.server.port);
+    app.use(bodyParser.json({limit: '15mb'}));
+    app.use(bodyParser.urlencoded({ extended: true, limit: '15mb' }));
     app.use(cookieParser(config.server.auth_key));
     session.Init();
 
@@ -36,13 +38,11 @@ function processRun() {
     }));
     app.use(compression());
     app.use(methodOverride());
-    app.use(bodyParser.json({limit: '15mb'}));
-    app.use(bodyParser.urlencoded({ extended: true, limit: '15mb' }));
     app.set('trust proxy', config.server.trust_proxy_host);
     app.use(express.static('../../dist'));
 
     entity.Init();
-    routes.Init();
+    router.Init();
   })().then(_ => {
     http.createServer(app).listen(app.get('port'), () => {
       console.log(util.format('[Logger]::[Process On]::[Pid:%d]::[Server Running At %d]::[%s]::[Started]',

@@ -4,18 +4,17 @@ import Loader from 'react-loader-spinner'
 
 import Layout from './containers/Layout';
 
-
 function Loading() {
   return <Loader type="Rings" color="#dc3545" height="100"	width="100" className="custom-center"/>;
 }
 
 const BlameBoard = Loadable({
-  loader: () => import('./views/Blame'),
+  loader: () => import('./views/Contents/Blame'),
   loading: Loading,
 });
 
 const BlockBoard = Loadable({
-  loader: () => import('./views/Block'),
+  loader: () => import('./views/Contents/Block'),
   loading: Loading,
 });
 

@@ -17,9 +17,9 @@ const initState = {
     error: null
 };
 
-export const authorize = (login, password) => ({
+export const authorize = (account, password) => ({
     type: AUTH_REQUEST,
-    payload: { login, password }
+    payload: { account, password }
 });
 
 export const destroyAuthorize = () => ({
