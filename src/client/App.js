@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import './App.css';
-
 import '@coreui/icons/css/coreui-icons.min.css';
 import 'flag-icon-css/css/flag-icon.min.css';
 import 'font-awesome/css/font-awesome.min.css';

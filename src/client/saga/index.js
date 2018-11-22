@@ -15,9 +15,9 @@ import {
 import AuthApi from './api/AuthApi';
 import BlameApi from './api/BlameApi';
 
-function* authorize({ payload: { login, password } }) {
+function* authorize({ payload: { account, password } }) {
     const options = {
-        account: login,
+        account: account,
         password: password
     };
     try {

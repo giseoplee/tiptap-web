@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Badge, Card, CardBody, CardHeader, Col, Pagination, PaginationItem, PaginationLink, Row, Table, Button } from 'reactstrap';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getBlameList } from '../reducers/blame';
+import { getBlameList } from '../../reducers/blame';
 
 class BlameList extends Component {
 
@@ -21,9 +21,14 @@ class BlameList extends Component {
         if (nextProps.blameList.data !== prevState.blameList) {
             return { blameList: nextProps.blameList };
         } else {
-            return false;
+            return null;
         }
     }
+
+    // shouldComponentUpdate (nextProps, prevState) {
+    //   log(nextProps);
+    //   log(prevState);
+    // }
 
     render() {
         const { blameList } = this.state;
@@ -34,28 +39,23 @@ class BlameList extends Component {
               <Col>
                 <Card>
                   <CardHeader>
-                    <i className="fa fa-align-justify"></i> 신고된 사용자 목록
-                        {/* { blameList ? log(blameList) : '뭐요' } */}
+                    <i className="fa fa-align-justify"></i> 차단된 사용자 목록
                   </CardHeader>
                   <CardBody>
                     <Table responsive>
                       <thead>
                       <tr>
                         <th>No. </th>
-                        <th>API name</th>
-                        <th>Description</th>
-                        <th>Base Route</th>
-                        <th>Status</th>
-                        <th>Date registered</th>
-                        <th></th>
+                        <th>이름</th>
+                        <th>사유</th>
+                        <th>차단 원인 컨텐츠</th>
+                        <th>상태</th>
                       </tr>
                       </thead>
                       <tbody>
                       <tr>
                         <td>1</td>
                         <td>GRS CHATBOT ANGEL</td>
-                        <td>Description</td>
-                        <td>/GRS/v1/</td>
                         <td>
                           <Badge color="success">Published</Badge>
                         </td>
@@ -68,8 +68,6 @@ class BlameList extends Component {
                       <tr>
                         <td>2</td>
                         <td>GRS CHATBOT RIA</td>
-                        <td>Description</td>
-                        <td>/GRS/v2/</td>
                         <td>
                           <Badge color="warning">Created</Badge>
                         </td>
@@ -82,8 +80,6 @@ class BlameList extends Component {
                       <tr>
                         <td>3</td>
                         <td>L-MESSAGE REST API</td>
-                        <td>Description</td>
-                        <td>/lmessage/rest/</td>
                         <td>
                           <Badge color="warning">Created</Badge>
                         </td>
@@ -96,8 +92,6 @@ class BlameList extends Component {
                       <tr>
                         <td>4</td>
                         <td>INSIGHT REST API</td>
-                        <td>Description</td>
-                        <td>/insight/v1/</td>
                         <td>
                           <Badge color="warning">Created</Badge>
                         </td>
@@ -144,17 +138,9 @@ class BlameList extends Component {
 }
 
 const mapStateToProps = (state) => {
-    // log(state);
     return {
         blameList: state.blame.data
     };
 };
 
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         getBlameList: () => dispatch(getBlameList())
-//     };
-// };
-
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(BlameList));
 export default withRouter(connect(mapStateToProps)(BlameList));
