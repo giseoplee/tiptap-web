@@ -33,10 +33,9 @@ function* authorize({ payload: { account, password } }) {
 }
 
 function* getBlameList({ payload: params }) {
-    const options = { params };
-    const { page = 1 } = options;
+    const { page = 1 } = !!params ? params : {};
     try {
-        const { data } = yield call(BlameApi.getList, `/api/blame/list/${page}`, options);
+        const { data } = yield call(BlameApi.getList, `/api/blame/list/${page}`);
         switch (data.code) {
             case "1000" : yield put({ type: GET_BLAME_SUCCESS, payload: data.data }); break;
             case "4000" : {
