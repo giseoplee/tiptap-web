@@ -11,11 +11,7 @@ const distDir = path.resolve(__dirname, '../../../', 'dist', 'index.html');
 
 const RoutesModule = (function() {
   return {
-    Init: function () {
-      app.get('*', (req, res) => {
-        res.sendFile(distDir);
-      });
-      
+    Init: function () {      
       app.use((req, res, next) => {
         if (!req.session.auth && req.originalUrl !== '/api/auth/login') {
           respondOnError(res, resultCode.sessionError, 'Not Alive Session');
@@ -33,6 +29,10 @@ const RoutesModule = (function() {
 
       app.use('/api/auth', authCtrl);
       app.use('/api/blame', blameCtrl);
+      
+      app.get('*', (req, res) => {
+        res.sendFile(distDir);
+      });
     }
   }
 })();

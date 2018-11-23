@@ -6,7 +6,9 @@ import {
 
 const initState = {
     status: 'INIT',
-    data: []
+    list: [],
+    totalItems: 0,
+    pageSize: 0
 }
 
 export const getBlameList = params => ({
@@ -17,7 +19,7 @@ export const getBlameList = params => ({
 export default function blame (state = initState, { type, payload }) {
     switch (type) {
         case GET_BLAME_SUCCESS:
-            return { ...state, data: payload.data };
+            return { ...state, list: payload.datas, totalItems: payload.totalItems, pageSize: payload.pageSize };
         case GET_BLAME_FAILURE:
             return { ...state, status: payload.desc };
         default:

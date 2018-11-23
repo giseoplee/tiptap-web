@@ -23,9 +23,7 @@ function* authorize({ payload: { account, password } }) {
     try {
         const { data } = yield call(AuthApi.isLogin, '/api/auth/login', options);
         switch (data.code) {
-            case "1000" : {
-                yield put({ type: AUTH_SUCCESS, payload: true });
-            } break;
+            case "1000" : yield put({ type: AUTH_SUCCESS, payload: true }); break;
             case "9000" : yield put({ type: AUTH_FAILURE, payload: data.data }); break;
             default : yield put({ type: AUTH_FAILURE, payload: 'Unkown Error' }); break;
         };
@@ -36,10 +34,15 @@ function* authorize({ payload: { account, password } }) {
 
 function* getBlameList({ payload: params }) {
     const options = { params };
+    const { page = 1 } = options;
     try {
-        const { data } = yield call(BlameApi.getList, '/api/blame/list', options);
+        const { data } = yield call(BlameApi.getList, `/api/blame/list/${page}`, options);
         switch (data.code) {
             case "1000" : yield put({ type: GET_BLAME_SUCCESS, payload: data.data }); break;
+            case "4000" : {
+                yield put({ type: AUTH_LOGOUT_COMPLETE, payload: false });
+                yield put({ type: SESSION_EXPIRED });
+            } break;
             case "9000" : yield put({ type: GET_BLAME_FAILURE, payload: data.data }); break;
             default : yield put({ type: GET_BLAME_FAILURE, payload: 'Unkown Error' }); break;
         };
