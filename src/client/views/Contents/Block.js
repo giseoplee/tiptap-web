@@ -18,7 +18,7 @@ class BlameList extends Component {
     }
 
     static getDerivedStateFromProps (nextProps, prevState) {
-        if (nextProps.blameList.data !== prevState.blameList) {
+        if (nextProps.blameList !== prevState.blameList) {
             return { blameList: nextProps.blameList };
         } else {
             return null;

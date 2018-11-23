@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import logo from '../../assets/img/ldcc_logo.png'
 import sygnet from '../../assets/img/lotte_logo.png'
-import avatar9 from '../../assets/img/avatars/2.jpg';
+import adminIcon from '../../assets/img/avatars/user.png';
 
 import { destroyAuthorize, sessionCheck, resetRedirect } from '../../reducers/auth';
 
@@ -63,7 +63,7 @@ class Header extends Component {
         <Nav className="ml-auto" navbar>
           <AppHeaderDropdown direction="down">
             <DropdownToggle nav>
-              <img src={avatar9} className="img-avatar" alt="admin@bootstrapmaster.com" />
+              <img src={adminIcon} className="img-avatar" alt="admin@bootstrapmaster.com" />
             </DropdownToggle>
             <DropdownMenu right style={{ right: 'auto' }}>
               <DropdownItem onClick={ () => this.logout() }><i className="fa fa-lock"></i> Logout</DropdownItem>

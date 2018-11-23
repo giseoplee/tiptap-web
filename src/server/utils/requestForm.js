@@ -1,6 +1,6 @@
 module.exports = {
     blameRq: {
-      '/api/blame/list': {}
+      // [/^\/api\/blame\/list*/]: {}
     },
     authRq: {
       '/api/auth/login': {
@@ -44,8 +44,5 @@ module.exports = {
       '/diary/delete/day': {
         date: '2018-09-26'
       }
-    },
-    fileRq: {
-      '/file/write': {}
     }
 }

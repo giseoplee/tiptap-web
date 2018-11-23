@@ -91,7 +91,8 @@ const blame = sequelizeInstance.define('blame', {
     content_id: { type: sequelize.INTEGER(11), allowNull: false }, // 신고 컨텐츠 pk
     type: { type: sequelize.CHAR(20), allowNull: false }, // 광고, 음란물, 기타
     user_id: { type : sequelize.INTEGER(11), allowNull : false },
-    target_user_id: { type : sequelize.INTEGER(11), allowNull : false }
+    target_user_id: { type : sequelize.INTEGER(11), allowNull : false },
+    status: { type: sequelize.BOOLEAN, allowNull: true, defaultValue : 1 } // 계정 정지 수행 여부, 1 = 아직 신고가 되기만 한 계정 / 0 = 신고를 받고 정지가 수행된 계정 / 2 = 정지됐다가 풀린 계정
 },
 {
     charset: 'utf8',
