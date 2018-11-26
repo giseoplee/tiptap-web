@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Card, CardBody, CardHeader, Col, Row, Table, Button } from 'reactstrap';
-import PaginationComponent from 'react-reactstrap-pagination';
+import Pagination from "react-js-pagination";
+import './Blame.css';
+
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getBlameList } from '../../reducers/blame';
@@ -9,7 +11,7 @@ const TableHeaderRow = props => {
   const { data } = props;
   return (
     <thead>
-      <tr> 
+      <tr>
         { map(v => <th key={v}>{v}</th>, data) }
       </tr>
     </thead>
@@ -29,8 +31,8 @@ const TableBodyRows = props => {
 
   return (
     <tbody>
-      { 
-        map(obj => 
+      {
+        map(obj =>
           <tr key= { obj.id }>
             <td>{ obj.id }</td>
             <td>{ obj.reporterUser.name }</td>
@@ -68,9 +70,7 @@ class BlameList extends Component {
   }
 
   render() {
-    const { blameList, totalItems, pageSize } = this.props;
-    log(totalItems);
-    log(pageSize);
+    const { blameList, totalItems, pageSize, currentPage } = this.props;
     return (
       <div className="animated fadeIn">
         <Row>
@@ -87,7 +87,13 @@ class BlameList extends Component {
                 <Row col="12">
                   <Col xs="4"></Col>
                   <Col xs="4">
-                    <PaginationComponent totalItems={totalItems} pageSize={pageSize} onSelect={ this.handleSelected } />
+                      <Pagination
+                          activePage={currentPage}
+                          itemsCountPerPage={pageSize}
+                          totalItemsCount={totalItems}
+                          pageRangeDisplayed={5}
+                          onChange={this.handleSelected}
+                        />
                   </Col>
                 </Row>
               </CardBody>
@@ -103,7 +109,8 @@ const mapStateToProps = state => {
   return {
       blameList: state.blame.list,
       totalItems: state.blame.totalItems,
-      pageSize: state.blame.pageSize
+      pageSize: state.blame.pageSize,
+      currentPage: state.blame.currentPage
   };
 };
 

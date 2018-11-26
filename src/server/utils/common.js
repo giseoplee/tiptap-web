@@ -30,7 +30,7 @@ const Common = (function (){
     decrypt: function (content) {
       return go(
         content,
-        content => crypto.AES.decrypt(content.toString(), auth_key, {iv: iv}),
+        content => crypto.AES.decrypt(content.toString(), auth_key, {iv: iv}),        
         bytes => bytes.toString(crypto.enc.Utf8)
       );
     },

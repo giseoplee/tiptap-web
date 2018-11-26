@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { 
-    AUTH_REQUEST, 
+import {
+    AUTH_REQUEST,
     AUTH_SUCCESS,
     AUTH_FAILURE,
     AUTH_LOGOUT,

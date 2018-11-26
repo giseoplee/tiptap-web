@@ -33,12 +33,20 @@ module.exports = {
       },
       {
         test: /\.(woff|woff2|eot|ttf|svg)$/,
-        loader: 'url-loader?limit=10000'
+        loader: 'url-loader?limit=1000'
       },
       {
         test: /\.(png|jpg|gif)$/,
         loader: 'file-loader?name=images/[name].[ext]'
-      }
+      },
+      {
+        test: /\.less$/,
+        use: [
+            { loader: "style-loader" },
+            { loader: "css-loader" },
+            { loader: "less-loader" }
+        ]
+      },
     ]
   },
   devServer: {
