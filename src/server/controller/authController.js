@@ -43,20 +43,31 @@ router.post('/login', async (req, res) => {
       }
     };
 
+    // log(options);
+    // log(decrypt('Lw399Cr1J7h1q5zeQ33LIw=='));
+    // log(decrypt('U5dLIKmZp2j7oAtcGrd3FQ=='));
+
+    const test = encrypt(password);
+    log(test);
+    log(decrypt(test));
+    log('????');
+
     accountInfo = await go(
       options,
       authModel.find,
       result => result.length > 0 ? result[0].dataValues : result
     );
 
+
+
     !!accountInfo.id
     ? ((account) => {
 
       req.session.auth = account.id; // api 호출 시 체크할 값
-      req.session.cookie.maxAge = config.server.session_maxAge;      
+      req.session.cookie.maxAge = config.server.session_maxAge;
 
       return respondJson(res, resultCode.success, 'Login Success');
-     })(accountInfo) 
+     })(accountInfo)
     : respondOnError(res, resultCode.error, 'Invalid User');
   } catch (error) {
     respondOnError(res, resultCode.error, error.message);
