@@ -100,9 +100,9 @@ class Login extends Component {
                         <Col xs="6">
                           <Button color="primary" className="px-4" onClick={ () => this.onSubmit() }>Login</Button>
                         </Col>
-                        <Col xs="6" className="text-right">
+                        {/* <Col xs="6" className="text-right">
                           <Button color="link" className="px-0">Forgot password?</Button>
-                        </Col>
+                        </Col> */}
                       </Row>
                     </Form>
                   </CardBody>

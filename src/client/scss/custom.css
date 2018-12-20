@@ -1,0 +1,27 @@
+.custom-font-3rem {
+    font-size: 3rem !important;
+}
+
+.vertical-margin-auto-3 {
+    margin: 3em auto;
+}
+
+.custom-text-align-center {
+    text-align: center;
+}
+
+p.content-spinner {
+    color: #bfbbbb;
+}
+
+p.page-spinner {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top: 0;
+    bottom: 0;
+    left: 200px;
+    right: 0;
+    margin: auto;
+    color: #bfbbbb;
+}

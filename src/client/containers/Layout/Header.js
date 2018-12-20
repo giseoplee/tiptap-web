@@ -5,8 +5,8 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
-import logo from '../../assets/img/ldcc_logo.png'
-import sygnet from '../../assets/img/lotte_logo.png'
+import logo from '../../assets/img/tiptap.png'
+import sygnet from '../../assets/img/stamp.png'
 import adminIcon from '../../assets/img/avatars/user.png';
 
 import { destroyAuthorize, sessionCheck, resetRedirect } from '../../reducers/auth';
@@ -54,12 +54,13 @@ class Header extends Component {
     return (
       <React.Fragment>
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
+        
         <AppNavbarBrand
-          full={{ src: logo, width: 115, height: 29, alt: 'TipTap-Admin' }}
+          full={{ src: logo, width: 90, height: 29, alt: 'TipTap Admin' }}
           minimized={{ src: sygnet, width: 30, height: 30, alt: 'TipTap' }}
         />
         <AppSidebarToggler className="d-md-down-none" display="lg" />
-
+        
         <Nav className="ml-auto" navbar>
           <AppHeaderDropdown direction="down">
             <DropdownToggle nav>
