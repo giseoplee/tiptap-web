@@ -25,3 +25,7 @@ p.page-spinner {
     margin: auto;
     color: #bfbbbb;
 }
+
+.custom-margin-bottom-0 {
+    margin-bottom: 0rem !important;
+}

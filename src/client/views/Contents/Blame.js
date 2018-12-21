@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Card, CardBody, CardHeader, Col, Row, Table, Button } from 'reactstrap';
 import Pagination from "react-js-pagination";
 import confirm from 'reactstrap-confirm';
-
+import { toast } from 'react-toastify';
 
 import BlameModal from '../../components/BlameModal';
 import ContentsLoading from '../../components/ContentsLoading';
@@ -11,6 +11,7 @@ import './Blame.css';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getBlameList } from '../../reducers/blame';
+import { updateUserStatus, resetUpdateUserStatus } from '../../reducers/user';
 
 const TableHeaderRow = props => {
   const { data } = props;
@@ -38,11 +39,10 @@ class BlameList extends Component {
       this.toggle = this.toggle.bind(this);
   }
 
-  openBlameContentModal (diary) {
-    log(diary);
+  openBlameContentModal (diary, writer, type) {
     this.setState({
       modal: !this.state.modal,
-      modalData: diary
+      modalData: { diary: diary, writer: writer, type: type }
     });
   }
 
@@ -52,21 +52,28 @@ class BlameList extends Component {
     });
   }
 
-  blockAccountConfirm () {
+  blockAccountConfirm (object) {
     return confirm({
       title: (
           <Fragment>
-              <strong>사용자 차단</strong>
+              <strong>사용자 계정 정지</strong>
           </Fragment>
       ),
-      message: "해당 사용자 계정을 차단하시겠습니까?",
-      cancelText: "취소",
-      confirmText: "차단",
-      confirmColor: "primary",
-      cancelColor: "danger"
-    }).then(result => {
-      log(result);
-    });
+      message: `정말로 [${object.reportedUser.name}] 사용자의 계정을 정지하시겠습니까?`,
+      cancelText: '아니요',
+      confirmText: '예',
+      confirmColor: 'primary',
+      cancelColor: 'danger'
+    }).then(result => result
+      ? this.props.dispatch(updateUserStatus({ 
+        id: object.id, 
+        status: 0, 
+        target_user_id: object.reportedUser.id, 
+        target_user_token: object.reportedUser.token, 
+        content_id: 
+        object.content_id }))
+      : undefined
+    );
   }
 
   handleSelected (index) {
@@ -76,6 +83,34 @@ class BlameList extends Component {
   componentDidMount () {
     this.props.dispatch(getBlameList());
   }
+
+  shouldComponentUpdate (nextProps, prevState) {
+    if (nextProps.updateStatus !== prevState.updateStatus) {
+      switch (nextProps.updateStatus) {
+        case 'WAITING': {
+          return false;
+        }
+        case 'SUCCESS': {
+          return go(
+            resetUpdateUserStatus(),
+            this.props.dispatch,
+            _ => toast.info("사용자 계정 정지를 완료하였습니다.", {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 2500
+            }),
+            _ => this.props.dispatch(getBlameList({ page: nextProps.currentPage })),
+            _ => false
+          );
+        }
+        default : {
+          return true;
+        }
+      }
+    } else {
+      return false;
+    }
+  }
+
 
   render() {
     const TableBodyRows = props => {
@@ -94,14 +129,14 @@ class BlameList extends Component {
                 <td>{ obj.id }</td>
                 <td>{ obj.reporterUser.name }</td>
                 <td>
-                  <Button size="sm" className="margin-left-20" outline color="info" data={ obj.diary } onClick={ _ => this.openBlameContentModal(obj.diary) }>
-                    Open
+                  <Button size="sm" className="margin-left-20" outline color="info" data={ obj.diary } onClick={ _ => this.openBlameContentModal(obj.diary, obj.reportedUser.name, convertType(obj.type)) }>
+                    내용 확인
                   </Button>
                 </td>
                 <td>{ obj.reportedUser.name }</td>
                 <td>{ convertType(obj.type) }</td>
                 <td>
-                  <Button size="sm" className="margin-left-8" outline color="danger" onClick={ _ => this.blockAccountConfirm() }>계정 차단</Button>
+                  <Button size="sm" className="margin-left-8" outline color="danger" onClick={ _ => this.blockAccountConfirm(obj) }>계정 정지</Button>
                 </td>
               </tr>
             , data));
@@ -109,6 +144,7 @@ class BlameList extends Component {
 
     const { status, blameList, totalItems, pageSize, currentPage } = this.props;
     return (
+      
       <div>
         <Row>
           <Col>
@@ -118,18 +154,29 @@ class BlameList extends Component {
               </CardHeader>
               <CardBody>
                 <Table responsive hover>
-                  <TableHeaderRow data={ ['No. ', '신고자', '컨텐츠', '신고대상자', '사유', '차단'] } />
+                  <TableHeaderRow data={ ['No. ', '신고자', '신고된 컨텐츠', '신고 대상자', '사유', '-'] } />
                   <tbody>
                     {
                       (status => {
-                        if (status === 'WAITING') {
-                          return <tr>
+                        switch (status) {
+                          case 'WAITING' : {
+                            return <tr>
                               <td colSpan="12">
                                   <ContentsLoading />
                               </td>
-                            </tr>
-                        } else {
-                          return <TableBodyRows data={ blameList } />
+                            </tr>;
+                          }
+                          case 'SUCCESS' : {
+                            return blameList.length > 0 
+                              ? <TableBodyRows data={ blameList } /> 
+                              : <tr>
+                                  <td colSpan="12" className="custom-text-align-center"> 
+                                    <Alert className="custom-margin-bottom-0" color="danger">
+                                      신고된 사용자가 존재하지 않습니다!
+                                    </Alert>
+                                  </td>
+                                </tr>;
+                          }
                         }
                       })(status)
                     }
@@ -163,7 +210,8 @@ const mapStateToProps = state => {
       blameList: state.blame.list,
       totalItems: state.blame.totalItems,
       pageSize: state.blame.pageSize,
-      currentPage: state.blame.currentPage
+      currentPage: state.blame.currentPage,
+      updateStatus: state.user.status
   };
 };
 

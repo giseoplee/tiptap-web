@@ -14,7 +14,7 @@ export default {
         icon: 'icon-pie-chart',
       },
       {
-        name: '차단 사용자 관리',
+        name: '정지 사용자 관리',
         url: '/block/list',
         icon: 'icon-speedometer',
       }

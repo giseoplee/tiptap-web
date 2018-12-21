@@ -2,13 +2,6 @@ import React, { Component } from 'react';
 import { Col } from 'reactstrap';
 
 class ContentLoading extends Component {
-    constructor (props) {
-        super(props);
-        this.state = {
-            modal: false
-        };
-    }
-
     render () {
         return (
             <Col className="text-center font-secondary vertical-margin-auto-3">  

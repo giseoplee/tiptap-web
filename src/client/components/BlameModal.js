@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Form, FormText, Label, Input, FormFeedback } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Card, CardImg, CardBody, CardText } from 'reactstrap';
+import noImage from '../assets/img/no_image.png';
+import moment from 'moment';
 
 class BlameModal extends Component {
     constructor (props) {
@@ -11,25 +13,40 @@ class BlameModal extends Component {
 
     render () {
         const { modal, toggle, data } = this.props;
-        log(this.props);
+        const { diary, writer, type } = data;
+        const closeButton = <button className="close" onClick={ toggle }>&times;</button>;
+
         return (
             <Modal isOpen={ modal }>
-                <ModalHeader><strong>header</strong></ModalHeader>
+                <ModalHeader toggle={ toggle } close={ closeButton }>
+                    <strong>신고된 컨텐츠 내용</strong>
+                </ModalHeader>
                 <ModalBody>
-                    { data.content }
-                    {/* <Form method="post" encType="multipart/form-data">
-                        <Label for="bot-name"><code>*</code>봇 이름</Label>
-                        <Input type="text" name="name" id="bot-name" value={name} onChange={ this.handleChange } valid={ validation } invalid={ !validation } />
-                        <FormFeedback invalid={ !validation } valid={ validation }>{ validation ? '사용 가능한 이름입니다.' : '중복되었거나 빈 값입니다.' }</FormFeedback>
-                        <Label for="bot-desc" className="custom-margin-vertical-none mt-3">봇 설명</Label>
-                        <FormText className="custom-margin-vertical-none mb-1">어떤 역할을 하는 봇인가요?</FormText>
-                        <Input type="textarea" name="description" id="bot-desc" value={ description } onChange={ this.handleChange } />
-                        <Label for="bot-img" className="custom-margin-vertical-none mt-3 mb-1">대표 이미지</Label>
-                        <Input type="file" name="image" id="bot-img" onChange={ this.handleChange }/>
-                        <FormText color="muted">
-                            봇의 대표 이미지를 지정해주세요. 미지정 시 기본 이미지가 표시됩니다.
-                        </FormText>
-                    </Form> */}
+                    <Card>
+                        <CardImg top width="100%" src={ (_ => { if (diary) return !!diary.imageUrl ? diary.imageUrl : noImage })() } alt="Card image cap" />
+                        <CardBody>
+                            <CardText>
+                                { !!diary ? diary.content : undefined }
+                            </CardText>
+                            <CardText>
+                                <div>
+                                    <small className="text-muted">
+                                        작성자 : { writer }
+                                    </small>
+                                </div>
+                                <div>
+                                    <small className="text-muted">
+                                        작성 시간 : { !!diary ? moment(diary.createdAt).format(`YYYY년 MM월 DD일 HH시 mm분`) : undefined } 
+                                    </small>
+                                </div>
+                                <div>
+                                    <small className="text-muted">
+                                        신고 사유 : { type } 
+                                    </small>
+                                </div>
+                            </CardText>
+                        </CardBody>
+                    </Card>
                 </ModalBody>
                 <ModalFooter className="border-top-none custom-text-align-center">
                     <Button color="secondary" className="modal-footer-btn" onClick={ toggle }>닫기</Button>
