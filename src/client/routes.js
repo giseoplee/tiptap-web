@@ -9,12 +9,12 @@ function Loading() {
         </p>;
 }
 
-const BlameBoard = Loadable({
+const Blame = Loadable({
   loader: () => import('./views/Contents/Blame'),
   loading: Loading
 });
 
-const BlockBoard = Loadable({
+const Block = Loadable({
   loader: () => import('./views/Contents/Block'),
   loading: Loading
 });
@@ -27,8 +27,8 @@ const Login = Loadable({
 const routes = [
   { path: '/', exact: true, name: 'Home', component: Layout },
   { path: '/login', name: 'Login', component: Login },
-  { path: '/blame/list', name: '신고 사용자 관리', component: BlameBoard },
-  { path: '/block/list', name: '차단 사용자 관리', component: BlockBoard }
+  { path: '/blame/list', name: '신고 사용자 관리', component: Blame },
+  { path: '/block/list', name: '정지 사용자 관리', component: Block }
 ];
 
 export default routes;

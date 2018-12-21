@@ -7,6 +7,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import 'simple-line-icons/css/simple-line-icons.css';
 import './scss/style.css';
 import './scss/custom.css';
+import 'react-toastify/dist/ReactToastify.min.css'; 
 
 import { Layout } from './containers';
 import { Login, Page404, Page500, Register } from './views/Pages';

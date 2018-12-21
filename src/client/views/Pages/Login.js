@@ -3,6 +3,7 @@ import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGr
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { authorize, clearAuthorize, sessionCheck, resetRedirect } from '../../reducers/auth';
+import { toast, ToastContainer } from 'react-toastify';
 
 class Login extends Component {
 
@@ -32,7 +33,10 @@ class Login extends Component {
   }
 
   loginFailAlert (msg) {
-    alert(msg);
+    toast.error(`[로그인 실패] [${msg}]`, {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 2500
+    })
   }
 
   onSubmit () {
@@ -105,6 +109,7 @@ class Login extends Component {
                         </Col> */}
                       </Row>
                     </Form>
+                    <ToastContainer />
                   </CardBody>
                 </Card>
                 {/* <Card className="text-white bg-primary py-5 d-md-down-none" style={{ width: 44 + '%' }}>

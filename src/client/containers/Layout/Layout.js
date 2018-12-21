@@ -18,6 +18,7 @@ import navigation from './NavItems';
 import routes from '../../routes';
 import Aside from './Aside';
 import Header from './Header';
+import { ToastContainer } from 'react-toastify';
 
 class Layout extends Component {
   render() {
@@ -52,6 +53,7 @@ class Layout extends Component {
           <AppAside fixed hidden>
             <Aside />
           </AppAside>
+          <ToastContainer />
         </div>
       </div>
     );
