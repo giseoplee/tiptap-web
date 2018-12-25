@@ -70,7 +70,7 @@ module.exports = {
         removeAttributeQuotes: true
       },
       template: resolve('/public/index.html'),
-      favicon: resolve('/public/lotte_logo.png')
+      favicon: resolve('/public/assets/img/stamp.png')
     })
   ]
 };
