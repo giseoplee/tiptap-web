@@ -13,7 +13,7 @@ const RoutesModule = (function() {
   return {
     Init: function () {      
       app.use((req, res, next) => {
-        if (!req.session.auth && req.originalUrl !== '/api/auth/login') {
+        if (!req.session.auth && !['/api/auth/login', '/login'].includes(req.originalUrl)) {
           respondOnError(res, resultCode.sessionError, 'Not Alive Session');
         } else {
           res.header('Access-Control-Allow-Origin', config.server.accept_domain);
